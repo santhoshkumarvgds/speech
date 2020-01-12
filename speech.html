@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
+    <title>speech</title>
+</head>
+<style>
+    * {
+        margin: 0px;
+        padding: 0px;
+    }
+    #message{
+        position: absolute;
+        top: 76%;
+        left: 50%;
+        margin-right: -50%;
+        transform: translate(-50%, -50%);
+        text-transform: capitalize;
+    }
+    .sa {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        margin-right: -50%;
+        transform: translate(-50%, -50%);
+    }
+    #btnGiveCommand{
+        border: none;
+
+        border-radius: 49%;
+    }
+    i{
+        color: white;
+        padding: 100px;   
+        background-color: red;
+        border-radius: 49%;
+        transition: 0.3s ease;
+        font-size: 90px;
+    }
+    i:hover{
+        color: red;
+        padding: 120px;
+        font-size: 110px;
+        background-color: white;
+    }
+    
+</style>
+
+<body>
+    <div class="sa">
+        <button title="click to start" id='btnGiveCommand'><i class="fas fa-microphone"></i></button>
+    </div>
+      
+        <span id='message'></span>
+   
+    <script>
+        var message = document.querySelector('#message');
+        var SpeechRecognition = SpeechRecognition || webkitSpeechRecognition;
+        var SpeechGrammarList = SpeechGrammarList || webkitSpeechGrammarList;
+        var grammar = '#JSGF V1.0;'
+        var recognition = new SpeechRecognition();
+        var speechRecognitionList = new SpeechGrammarList();
+        speechRecognitionList.addFromString(grammar, 1);
+        recognition.grammars = speechRecognitionList;
+        recognition.lang = 'en-US';
+        recognition.interimResults = false;
+        recognition.onresult = function(event) {
+            var last = event.results.length - 1;
+            var command = event.results[last][0].transcript;
+            message.textContent = command;
+
+        };
+        recognition.onspeechend = function() {
+            recognition.stop();
+        };
+        recognition.onerror = function(event) {
+            message.textContent = 'Error occurred in recognition: ' + event.error;
+        }
+        document.querySelector('#btnGiveCommand').addEventListener('click', function() {
+            recognition.start();
+        });
+
+    </script>
+</body>
+
+</html>
